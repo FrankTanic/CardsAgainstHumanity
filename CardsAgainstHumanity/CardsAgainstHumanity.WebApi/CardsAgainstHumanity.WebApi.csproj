@@ -90,6 +90,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\CardModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CardsAgainstHumanityDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
