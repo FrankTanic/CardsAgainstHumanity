@@ -6,7 +6,7 @@ namespace CardsAgainstHumanity.WebApi.Models
     public class CardsAgainstHumanityDbContext : DbContext
     {
         public CardsAgainstHumanityDbContext()
-            : base("PandoraContext")
+            : base("CardsAgainstHumanityContext")
         {
         }
     }
