@@ -83,7 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -95,6 +97,8 @@
     <Compile Include="Models\CardModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CardsAgainstHumanityDbContext.cs" />
+    <Compile Include="Models\GameModel.cs" />
+    <Compile Include="Models\UsedCardModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
