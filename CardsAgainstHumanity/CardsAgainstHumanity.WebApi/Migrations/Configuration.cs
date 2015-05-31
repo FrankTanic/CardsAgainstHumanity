@@ -14,6 +14,10 @@ namespace CardsAgainstHumanity.WebApi.Models
 
         protected override void Seed(CardsAgainstHumanity.WebApi.Models.CardsAgainstHumanityDbContext context)
         {
+            context.Game.AddOrUpdate(
+                new Game { ID = 1, GameName = "Hello Game", Created = DateTimeOffset.UtcNow }
+                );
+
             context.Card.AddOrUpdate(
                 new Card { Black = 0, Description = "Being on fire." },
                 new Card { Black = 0, Description = "Racism." },
