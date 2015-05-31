@@ -14,5 +14,7 @@ namespace CardsAgainstHumanity.WebApi.Models
         public DbSet<Card> Card { get; set; }
         public DbSet<UsedCard> UsedCard { get; set; }
         public DbSet<Game> Game { get; set; }
+        public DbSet<Player> Player { get; set; }
+        public DbSet<Connection> Connection { get; set; }
     }
 }
