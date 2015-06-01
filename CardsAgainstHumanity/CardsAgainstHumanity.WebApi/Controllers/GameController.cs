@@ -17,7 +17,7 @@ namespace CardsAgainstHumanity.WebApi.Controllers
         [Route("GetGame/{id}")]
         public async Task<IHttpActionResult> GetGame(int id)
         {
-            Game game = _db.Game.Where(g => g.ID == id).Single();
+            Game game = _db.Game.Where(g => g.ID == id).SingleOrDefault();
 
             return Ok(game);
         }
