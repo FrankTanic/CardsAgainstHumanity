@@ -7,6 +7,8 @@ namespace CardsAgainstHumanity.WebApi.Models
     {
         public int ID { get; set; }
         public string Username { get; set; }
+        public int Czar { get; set; }
+        public DateTimeOffset Joined { get; set; }
         public ICollection<Connection> Connections { get; set; }
         public virtual ICollection<Game> Games { get; set; }
     }
