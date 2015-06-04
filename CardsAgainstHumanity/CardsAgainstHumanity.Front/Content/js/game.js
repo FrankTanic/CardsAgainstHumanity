@@ -17,8 +17,18 @@
         $('#players').append('<li>' + player + '</li>');
     }
 
+    game.client.removePlayer = function (player) {
+        
+        $('#connected').append('<li>' + player + ' has lefted' + '</li>');
+
+        $('li').filter(function () {
+            return $.text([this]) === player;
+        }).remove();
+    }
+
     $.connection.hub.start(function () {
         game.server.joinRoom(username, 1);
+        game.server.playerList(1);
     });
 
 });
