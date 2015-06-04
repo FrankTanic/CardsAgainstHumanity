@@ -16,5 +16,6 @@ namespace CardsAgainstHumanity.Front.Models
     {
         public int ID { get; set; }
         public string UserName { get; set; }
+        public int Czar { get; set; }
     }
 }
