@@ -4,7 +4,11 @@
 }
 
 <div class="black-card-view">
+    
+</div>
 
+<div class="played-card-view">
+    <button id="nextRound">Next Round</button>
 </div>
 
 <div class="cards-view">
@@ -24,7 +28,7 @@
     <ul id="players">
         @foreach (var player in Model.Players)
         {
-            <li>@player.UserName</li>
+            <li>@player.UserName @if (player.Czar == 1) { <text>(Czar)</text> }</li>
         }
     </ul>
 </div>

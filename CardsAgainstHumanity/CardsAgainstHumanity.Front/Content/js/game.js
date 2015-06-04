@@ -28,7 +28,6 @@
 
     $.connection.hub.start(function () {
         game.server.joinRoom(username, 1);
-        game.server.playerList(1);
     });
 
 });
