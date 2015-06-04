@@ -87,7 +87,7 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
         public async Task LeaveGame(string username, int gameID)
         {
-            await Clients.Group(gameID.ToString()).addChatMessage(username + " left the game.");
+            await Clients.Group(gameID.ToString()).removePlayer(username);
         }
 
         public override Task OnDisconnected(bool stopCalled)
