@@ -3,16 +3,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<ul>
-    <li>Game ID: @Model.ID</li>
-    <li>Created: @Model.Created</li>
-</ul>
+<div class="black-card-view">
 
-<ul id="connected">
-</ul>
+</div>
 
-<h2>Match</h2>
+<div class="cards-view">
 
-<ul id="players">
-</ul>
+</div>
 
+<div class="sidebar-gameinfo">
+    <ul>
+        <li>Game ID: @Model.ID</li>
+        <li>Created: @Model.Created</li>
+    </ul>
+
+    <ul id="connected"></ul>
+
+    <h2>Match</h2>
+
+    <ul id="players">
+        @foreach (var player in Model.Players)
+        {
+            <li>@player.UserName</li>
+        }
+    </ul>
+</div>
