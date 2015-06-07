@@ -4,11 +4,13 @@
 }
 
 <div class="black-card-view">
-    
+    <div>
+        <p id="black-card">@ViewBag.BlackCard</p>
+    </div>
 </div>
 
 <div class="played-card-view">
-    <button id="nextRound">Next Round</button>
+    <button id="nextRound" value="@ViewBag.BlackCardID">Next Round</button>
 </div>
 
 <div class="cards-view">
