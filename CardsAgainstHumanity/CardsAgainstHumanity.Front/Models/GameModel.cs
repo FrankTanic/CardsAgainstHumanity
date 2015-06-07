@@ -10,6 +10,7 @@ namespace CardsAgainstHumanity.Front.Models
         public int GameCode { get; set; }
         public DateTimeOffset Created { get; set; }
         public virtual ICollection<Player> Players { get; set; }
+        public virtual ICollection<Card> Cards { get; set; }
     }
 
     public class Player
@@ -17,5 +18,12 @@ namespace CardsAgainstHumanity.Front.Models
         public int ID { get; set; }
         public string UserName { get; set; }
         public int Czar { get; set; }
+    }
+
+    public class Card
+    {
+        public int ID { get; set; }
+        public int Black { get; set; }
+        public string Description { get; set; }
     }
 }
