@@ -46,10 +46,16 @@ namespace CardsAgainstHumanity.Front.Controllers
             {
                 Game game = await response.Content.ReadAsAsync<Game>();
 
+                var blackCard = game.Cards.Where(c => c.Black == 1).FirstOrDefault();
+
+                ViewBag.BlackCard = blackCard.Description;
+                ViewBag.BlackCardID = blackCard.ID;
+
                 return View(game);
             }
 
             return View();
         }
+
     }
 }

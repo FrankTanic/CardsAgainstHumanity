@@ -1,6 +1,7 @@
 namespace CardsAgainstHumanity.WebApi.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -14,11 +15,9 @@ namespace CardsAgainstHumanity.WebApi.Models
 
         protected override void Seed(CardsAgainstHumanity.WebApi.Models.CardsAgainstHumanityDbContext context)
         {
-            context.Game.AddOrUpdate(
-                new Game { ID = 1, GameName = "Hello Game", Created = DateTimeOffset.UtcNow }
-                );
 
-            context.Card.AddOrUpdate(
+            var cards = new List<Card>
+            {
                 new Card { Black = 0, Description = "Being on fire." },
                 new Card { Black = 0, Description = "Racism." },
                 new Card { Black = 0, Description = "Old-people smell." },
@@ -46,7 +45,21 @@ namespace CardsAgainstHumanity.WebApi.Models
                 new Card { Black = 1, Description = "Maybe she's born with it. Maybe it's __________." },
                 new Card { Black = 1, Description = "What's the next happy meal toy?" },
                 new Card { Black = 1, Description = "Here is the church, here is the steeple, open the doors and there is __________." },
-                new Card { Black = 1, Description = "It's a pity that kids these days are all getting involved with _________." });
-        }
+                new Card { Black = 1, Description = "It's a pity that kids these days are all getting involved with _________." }
+            };
+
+            cards.ForEach(s => context.Card.AddOrUpdate(c => c.ID, s));
+            context.SaveChanges();
+
+            var games = new List<Game>
+            {
+                new Game { ID = 1, GameName = "Hello Game", Created = DateTimeOffset.UtcNow, Cards = new List<Card>()}
+            };
+
+            games.ForEach(s => context.Game.AddOrUpdate(p => p.ID, s));
+            context.SaveChanges();
+
+        }   
+
     }
 }

@@ -85,6 +85,13 @@ namespace CardsAgainstHumanity.WebApi.Hubs
             await Clients.Group(gameID.ToString()).addPlayer(username);
         }
 
+        public async Task NextRound(int cardID, int gameID)
+        {
+            var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1).OrderBy(c => Guid.NewGuid()).Take(1).First();
+
+            await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID);
+        }
+
         public async Task LeaveGame(string username, int gameID)
         {
             await Clients.Group(gameID.ToString()).removePlayer(username);
