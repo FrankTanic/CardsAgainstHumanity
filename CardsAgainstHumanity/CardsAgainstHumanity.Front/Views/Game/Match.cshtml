@@ -14,7 +14,13 @@
 </div>
 
 <div class="cards-view">
-
+    @foreach (var card in ViewBag.WhiteCards)
+    {
+        <div class="white-card">
+            @card.Description
+            <button id="playCard" value="@card.ID">Play Card</button>
+        </div>
+    }
 </div>
 
 <div class="sidebar-gameinfo">
