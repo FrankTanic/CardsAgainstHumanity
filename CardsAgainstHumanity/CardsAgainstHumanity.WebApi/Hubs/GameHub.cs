@@ -85,9 +85,49 @@ namespace CardsAgainstHumanity.WebApi.Hubs
             await Clients.Group(gameID.ToString()).addPlayer(username);
         }
 
+        public async Task PlayCard(int cardID, int gameID)
+        {
+            var game = _db.Game.Where(g => g.ID == 1).Single();
+            var card = _db.Card.Where(c => c.ID == cardID).Single();
+
+            game.Stash.Add(new GameCardStash()
+                {   
+                    ConnectionID = Context.ConnectionId,
+                    Card = card
+                });
+
+            _db.SaveChanges();
+
+            await Clients.Group(gameID.ToString()).playWhiteCard(cardID);
+        }
+
+        public async Task RemoveCardFromDeck(int cardID, int gameID)
+        {
+            await Clients.Group(gameID.ToString()).removeCard(cardID);
+        }
+
+        // The Next round method retrieve a new black card and empty the stash of the game
         public async Task NextRound(int cardID, int gameID)
         {
-            var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1).OrderBy(c => Guid.NewGuid()).Take(1).First();
+            var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1)
+                                .OrderBy(c => Guid.NewGuid())
+                                .Take(1)
+                                .First();
+
+            var game = _db.Game.Where(g => g.ID == gameID)
+                                .Single();
+
+            var gameStash = game.Stash.ToList();
+
+            if (gameStash != null)
+            {
+                foreach (var stash in gameStash)
+                {
+                    _db.GameCardStash.Remove(stash);
+                }
+
+                _db.SaveChanges();
+            }
 
             await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID);
         }
