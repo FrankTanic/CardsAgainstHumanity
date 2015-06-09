@@ -52,8 +52,10 @@ namespace CardsAgainstHumanity.Front.Controllers
                 ViewBag.BlackCardID = blackCard.ID;
 
                 var whiteCards = game.Cards.Where(c => c.Black == 0).Take(10).ToList();
-
                 ViewBag.WhiteCards = whiteCards;
+
+                var stash = game.Stash.Where(s => s.Game.ID == game.ID);
+                ViewBag.Stash = stash;
 
                 return View(game);
             }
