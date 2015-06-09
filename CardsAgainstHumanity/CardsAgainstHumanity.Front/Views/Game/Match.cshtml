@@ -10,6 +10,13 @@
 </div>
 
 <div class="played-card-view">
+    @if (ViewBag.Stash != null)
+    {
+        foreach (var stash in ViewBag.Stash)
+        {
+            <div id="@stash.Card.ID" class="white-card-played">@stash.Card.Description</div>
+        }
+    }
     <button id="nextRound" value="@ViewBag.BlackCardID">Next Round</button>
 </div>
 
@@ -18,7 +25,7 @@
     {
         <div class="white-card">
             @card.Description
-            <button id="playCard" value="@card.ID">Play Card</button>
+            <button class="playCard" value="@card.ID">Play Card</button>
         </div>
     }
 </div>
