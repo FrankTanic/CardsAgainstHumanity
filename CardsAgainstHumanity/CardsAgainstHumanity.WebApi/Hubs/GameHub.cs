@@ -21,16 +21,32 @@ namespace CardsAgainstHumanity.WebApi.Hubs
                             .Include(p => p.Games)
                             .SingleOrDefault(p => p.Username == username);
 
+            var playerCount = _db.Player.Count();
+
             if (player == null)
             {
-                player = new Player()
+                if (playerCount == 0)
                 {
-                    Username = username,
-                    Czar = 0,
-                    Joined = DateTimeOffset.UtcNow,
-                    Connections = new List<Connection>()
-                };
-                _db.Player.Add(player);
+                    player = new Player()
+                    {
+                        Username = username,
+                        Czar = 1,
+                        Joined = DateTimeOffset.UtcNow,
+                        Connections = new List<Connection>()
+                    };
+                    _db.Player.Add(player);
+                }
+                else
+                {
+                    player = new Player()
+                    {
+                        Username = username,
+                        Czar = 0,
+                        Joined = DateTimeOffset.UtcNow,
+                        Connections = new List<Connection>()
+                    };
+                    _db.Player.Add(player);
+                }
             }
             else
             {
@@ -87,9 +103,28 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
         public async Task NextRound(int cardID, int gameID)
         {
+            var czar = _db.Player.Where(p => p.Czar == 1).Single();
+            czar.Czar = 0;
+            _db.SaveChanges();
+
+            var newczar = _db.Player.OrderBy(i => i.ID).FirstOrDefault(i => i.ID > czar.ID);
+            if (newczar == null)
+            {
+                var czarReset = _db.Player.OrderBy(i => i.ID).First();
+                czarReset.Czar = 1;
+                _db.SaveChanges();
+            }
+            else
+            {
+                newczar.Czar = 1;
+                _db.SaveChanges();
+            }
+
             var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1).OrderBy(c => Guid.NewGuid()).Take(1).First();
 
             await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID);
+
+            
         }
 
         public async Task LeaveGame(string username, int gameID)
