@@ -173,6 +173,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CardsAgainstHumanityDbContext.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
+    <Compile Include="Models\GameCardStashModel.cs" />
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Models\UsedCardModel.cs" />
