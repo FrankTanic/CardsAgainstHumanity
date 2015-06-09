@@ -11,6 +11,8 @@ namespace CardsAgainstHumanity.Front.Models
         public DateTimeOffset Created { get; set; }
         public virtual ICollection<Player> Players { get; set; }
         public virtual ICollection<Card> Cards { get; set; }
+        public virtual ICollection<GameCardStash> Stash { get; set; }
+
     }
 
     public class Player
