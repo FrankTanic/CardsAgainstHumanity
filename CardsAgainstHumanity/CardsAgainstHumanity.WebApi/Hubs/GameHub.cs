@@ -21,16 +21,32 @@ namespace CardsAgainstHumanity.WebApi.Hubs
                             .Include(p => p.Games)
                             .SingleOrDefault(p => p.Username == username);
 
+            var playerCount = _db.Player.Count();
+
             if (player == null)
             {
-                player = new Player()
+                if (playerCount == 0)
                 {
-                    Username = username,
-                    Czar = 0,
-                    Joined = DateTimeOffset.UtcNow,
-                    Connections = new List<Connection>()
-                };
-                _db.Player.Add(player);
+                    player = new Player()
+                    {
+                        Username = username,
+                        Czar = 1,
+                        Joined = DateTimeOffset.UtcNow,
+                        Connections = new List<Connection>()
+                    };
+                    _db.Player.Add(player);
+                }
+                else
+                {
+                    player = new Player()
+                    {
+                        Username = username,
+                        Czar = 0,
+                        Joined = DateTimeOffset.UtcNow,
+                        Connections = new List<Connection>()
+                    };
+                    _db.Player.Add(player);
+                }
             }
             else
             {
@@ -74,22 +90,44 @@ namespace CardsAgainstHumanity.WebApi.Hubs
                 _db.SaveChanges();
 
                 await Groups.Add(Context.ConnectionId, gameID.ToString());
+
+                await Player(player.ID, player.Czar, username, gameID);
             }
 
-            await Player(username, gameID);
             Clients.Group(gameID.ToString()).addChatMessage(username + " joined.");
         }
 
-        public async Task Player(string username, int gameID)
+        public async Task Player(int playerID, int playerCzar, string username, int gameID)
         {
-            await Clients.Group(gameID.ToString()).addPlayer(username);
+            await Clients.Group(gameID.ToString()).addPlayer(playerID, playerCzar, username);
         }
 
         public async Task NextRound(int cardID, int gameID)
         {
+            var czar = _db.Player.Where(p => p.Czar == 1).Single();
+            czar.Czar = 0;
+            _db.SaveChanges();
+
+            var newczar = _db.Player.OrderBy(i => i.ID).FirstOrDefault(i => i.ID > czar.ID);
+            if (newczar == null)
+            {
+                var czarReset = _db.Player.OrderBy(i => i.ID).First();
+                czarReset.Czar = 1;
+                _db.SaveChanges();
+            }
+            else
+            {
+                newczar.Czar = 1;
+                _db.SaveChanges();
+            }
+
             var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1).OrderBy(c => Guid.NewGuid()).Take(1).First();
 
-            await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID);
+            var czarID = _db.Player.Where(b => b.Czar == 1).Single();
+
+            await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID, czarID.ID);
+
+            
         }
 
         public async Task LeaveGame(string username, int gameID)
