@@ -90,15 +90,16 @@ namespace CardsAgainstHumanity.WebApi.Hubs
                 _db.SaveChanges();
 
                 await Groups.Add(Context.ConnectionId, gameID.ToString());
+
+                await Player(player.ID, player.Czar, username, gameID);
             }
 
-            await Player(username, gameID);
             Clients.Group(gameID.ToString()).addChatMessage(username + " joined.");
         }
 
-        public async Task Player(string username, int gameID)
+        public async Task Player(int playerID, int playerCzar, string username, int gameID)
         {
-            await Clients.Group(gameID.ToString()).addPlayer(username);
+            await Clients.Group(gameID.ToString()).addPlayer(playerID, playerCzar, username);
         }
 
         public async Task NextRound(int cardID, int gameID)
@@ -122,7 +123,9 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
             var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1).OrderBy(c => Guid.NewGuid()).Take(1).First();
 
-            await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID);
+            var czarID = _db.Player.Where(b => b.Czar == 1).Single();
+
+            await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID, czarID.ID);
 
             
         }
