@@ -14,7 +14,13 @@
     };
 
     game.client.addPlayer = function (playerID, playerCzar, player) {
-        $('#players').append('<li id="' + playerID + '" value="' + playerCzar + '" >' + player + '</li>');
+        if (playerCzar !== 1) {
+            $('#players').append('<li id="' + playerID + '" value="' + playerCzar + '" >' + player + '</li>');
+        }
+     else
+        {
+            $('#players').append('<li id="' + playerID + '" value="' + playerCzar + '" >' + player + ' <span class="czar">(Czar)</span></li> ');
+        }
     }
 
     game.client.removePlayer = function (player) {
