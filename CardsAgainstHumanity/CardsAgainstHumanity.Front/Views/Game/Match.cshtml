@@ -36,7 +36,7 @@
     <ul id="players">
         @foreach (var player in Model.Players)
         {
-            <li>@player.UserName @if (player.Czar == 1) { <text>(Czar)</text> }</li>
+            <li id="@player.ID">@player.UserName @if (player.Czar == 1) { <text><span class="czar">(Czar)</span></text> }</li>
         }
     </ul>
 </div>
