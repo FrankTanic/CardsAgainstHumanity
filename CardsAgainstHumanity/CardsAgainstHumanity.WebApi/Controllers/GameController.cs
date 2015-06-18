@@ -15,11 +15,62 @@ namespace CardsAgainstHumanity.WebApi.Controllers
         private CardsAgainstHumanityDbContext _db = new CardsAgainstHumanityDbContext();
 
         [Route("GetGame/{id}")]
-        public async Task<IHttpActionResult> GetGame(int id)
+        public async Task<IHttpActionResult> GetGame(int? id, string username)
         {
-            Game game = _db.Game.Where(g => g.ID == id).SingleOrDefault();
+            if (id != null)
+            {
+                Game game = _db.Game.Where(g => g.ID == id).Single();
 
-            return Ok(game);
+                if (game.UsedCards.Count == 0)
+                {
+                    var cards = game.Cards.Where(c => c.Black != 1)
+                                .OrderBy(c => Guid.NewGuid())
+                                .Take(10)
+                                .ToList();
+
+                    foreach (var card in cards)
+                    {
+                        game.UsedCards.Add(new UsedCard()
+                        {
+                            Card = card,
+                            Game = game,
+                            Username = username
+                        });
+                    }
+
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    var user = game.UsedCards.Where(u => u.Username == username).FirstOrDefault();
+
+                    if (user == null)
+                    {
+                        var usedCards = game.UsedCards.ToList();
+                        var cards = game.Cards.ToList();
+
+                        var newCards = cards.Where(c => !usedCards.Any(uc => uc.Card.ID == c.ID && uc.Card.Black == 1) && c.Black == 0)
+                                            .OrderBy(c => Guid.NewGuid())
+                                            .Take(10)
+                                            .ToList();
+
+                        foreach (var card in newCards)
+                        {
+                            game.UsedCards.Add(new UsedCard()
+                                {
+                                    Card = card,
+                                    Game = game,
+                                    Username = username
+                                });
+                        }
+                        _db.SaveChanges();
+                    }
+                }
+
+                return Ok(game);
+            }
+
+            return NotFound();
         }
     }
 }

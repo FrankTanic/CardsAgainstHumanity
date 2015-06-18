@@ -5,10 +5,6 @@
     // Create the connection with the hub
     var game = $.connection.gameHub;
 
-    var username = prompt("Enter your username: ", "");
-
-    $.connection.hub.qs = { 'username': username };
-
     game.client.addChatMessage = function (message) {
         $('#connected').append('<li>' + message + '</li>');
     };
@@ -25,7 +21,7 @@
 
     game.client.removePlayer = function (player) {
         
-        $('#connected').append('<li>' + player + ' has lefted' + '</li>');
+        $('#connected').append('<li>' + player + ' has left' + '</li>');
 
         $('li').filter(function () {
             return $.text([this]) === player;
@@ -39,6 +35,10 @@
 
         $(".czar").remove();
         $('#' + czarID + '').append('<span class="czar">(Czar)</span>');
+
+        $('.white-card-played').remove();
+        $('.playCard').show();
+
     }
 
     $('#nextRound').click(function () {
@@ -49,8 +49,21 @@
         
     });
 
+    game.client.playWhiteCard = function (cardID) {
+        $('.played-card-view').append('<div id="' + cardID + '" class="white-card-played">');
+    }
+
+    $('.playCard').click(function () {
+        var cardID = $(this).attr("value");
+
+        $('.playCard').hide();
+        $('.card-' + cardID).remove();
+
+        game.server.playCard(cardID, 1);
+    })
+
     $.connection.hub.start(function () {
-        game.server.joinRoom(username, 1);
+        game.server.joinRoom(1);
     });
 
 

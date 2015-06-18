@@ -12,5 +12,7 @@ namespace CardsAgainstHumanity.WebApi.Models
         public DateTimeOffset Created { get; set; }
         public virtual ICollection<Player> Players { get; set; }
         public virtual ICollection<Card> Cards { get; set; }
+        public virtual ICollection<UsedCard> UsedCards { get; set; }
+        public virtual ICollection<GameCardStash> Stash { get; set; }
     }
 }

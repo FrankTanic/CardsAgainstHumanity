@@ -15,7 +15,8 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
         public override Task OnConnected()
         {
-            var username = Context.QueryString["username"];
+            var userCookie = HttpContext.Current.Request.Cookies["user"];
+            var username = userCookie.Value;
 
             var player = _db.Player
                             .Include(p => p.Games)
@@ -77,9 +78,12 @@ namespace CardsAgainstHumanity.WebApi.Hubs
             return base.OnConnected();
         }
 
-        public async Task JoinRoom(string username, int gameID)
+        public async Task JoinRoom(int gameID)
         {
             var game = _db.Game.Find(gameID);
+
+            var userCookie = HttpContext.Current.Request.Cookies["user"];
+            var username = userCookie.Value;
 
             if(game != null)
             {
@@ -102,6 +106,28 @@ namespace CardsAgainstHumanity.WebApi.Hubs
             await Clients.Group(gameID.ToString()).addPlayer(playerID, playerCzar, username);
         }
 
+        public async Task PlayCard(int cardID, int gameID)
+        {
+            var game = _db.Game.Where(g => g.ID == 1).Single();
+            var card = _db.Card.Where(c => c.ID == cardID).Single();
+
+            game.Stash.Add(new GameCardStash()
+                {   
+                    ConnectionID = Context.ConnectionId,
+                    Card = card
+                });
+
+            _db.SaveChanges();
+
+            await Clients.Group(gameID.ToString()).playWhiteCard(cardID);
+        }
+
+        public async Task RemoveCardFromDeck(int cardID, int gameID)
+        {
+            await Clients.Group(gameID.ToString()).removeCard(cardID);
+        }
+
+        // The Next round method retrieve a new black card and empty the stash of the game
         public async Task NextRound(int cardID, int gameID)
         {
             var czar = _db.Player.Where(p => p.Czar == 1).Single();
@@ -123,11 +149,24 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
             var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1).OrderBy(c => Guid.NewGuid()).Take(1).First();
 
+            var game = _db.Game.Where(g => g.ID == gameID)
+                                .Single();
+
+            var gameStash = game.Stash.ToList();
+
+            if (gameStash != null)
+            {
+                foreach (var stash in gameStash)
+                {
+                    _db.GameCardStash.Remove(stash);
+                }
+
+                _db.SaveChanges();
+            }
+
             var czarID = _db.Player.Where(b => b.Czar == 1).Single();
 
-            await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID, czarID.ID);
-
-            
+            await Clients.Group(gameID.ToString()).nextBlackCard(card.Description, card.ID, czarID.ID); 
         }
 
         public async Task LeaveGame(string username, int gameID)

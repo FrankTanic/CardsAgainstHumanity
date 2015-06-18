@@ -51,6 +51,8 @@ namespace CardsAgainstHumanity.WebApi.Models
             cards.ForEach(s => context.Card.AddOrUpdate(c => c.ID, s));
             context.SaveChanges();
 
+
+
             var games = new List<Game>
             {
                 new Game { ID = 1, GameName = "Hello Game", Created = DateTimeOffset.UtcNow, Cards = new List<Card>()}
@@ -59,7 +61,21 @@ namespace CardsAgainstHumanity.WebApi.Models
             games.ForEach(s => context.Game.AddOrUpdate(p => p.ID, s));
             context.SaveChanges();
 
-        }   
+            var game = context.Game.FirstOrDefault();
+            var crds = game.Cards.FirstOrDefault();
+
+            if(crds == null)
+            {
+                foreach (var card in cards)
+                {
+                    game.Cards.Add(card);
+                }
+            }
+
+            context.SaveChanges();
+
+
+        }
 
     }
 }
