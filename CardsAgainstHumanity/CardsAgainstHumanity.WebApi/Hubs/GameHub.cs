@@ -15,7 +15,8 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
         public override Task OnConnected()
         {
-            var username = Context.QueryString["username"];
+            var userCookie = HttpContext.Current.Request.Cookies["user"];
+            var username = userCookie.Value;
 
             var player = _db.Player
                             .Include(p => p.Games)
@@ -61,9 +62,12 @@ namespace CardsAgainstHumanity.WebApi.Hubs
             return base.OnConnected();
         }
 
-        public async Task JoinRoom(string username, int gameID)
+        public async Task JoinRoom(int gameID)
         {
             var game = _db.Game.Find(gameID);
+
+            var userCookie = HttpContext.Current.Request.Cookies["user"];
+            var username = userCookie.Value;
 
             if(game != null)
             {
