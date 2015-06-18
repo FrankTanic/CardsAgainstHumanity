@@ -108,8 +108,16 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
         public async Task PlayCard(int cardID, int gameID)
         {
+            var userCookie = HttpContext.Current.Request.Cookies["user"];
+            var username = userCookie.Value;
+
             var game = _db.Game.Where(g => g.ID == 1).Single();
             var card = _db.Card.Where(c => c.ID == cardID).Single();
+
+            var playerCount = game.Players.Count();
+            var usedCardCount = game.UsedCards.Count();
+
+            var cardDescription = card.Description;
 
             game.Stash.Add(new GameCardStash()
                 {   
@@ -119,7 +127,22 @@ namespace CardsAgainstHumanity.WebApi.Hubs
 
             _db.SaveChanges();
 
-            await Clients.Group(gameID.ToString()).playWhiteCard(cardID);
+                await Clients.Group(gameID.ToString()).playWhiteCard(cardID, cardDescription);
+
+                checkIfShowWhiteCards(gameID, username);
+        }
+
+        public async Task checkIfShowWhiteCards(int gameID, string username)
+        {
+            var game = _db.Game.Where(g => g.ID == gameID).Single();
+
+            var playerCount = game.Players.Count();
+            var usedCardCount = game.Stash.Where(s => s.Game.ID == gameID).Count();
+
+            if(playerCount == usedCardCount)
+            {
+                await Clients.Group(gameID.ToString()).showWhiteCards();
+            }
         }
 
         public async Task RemoveCardFromDeck(int cardID, int gameID)
