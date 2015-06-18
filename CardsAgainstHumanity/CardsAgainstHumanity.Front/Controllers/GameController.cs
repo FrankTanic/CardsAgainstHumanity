@@ -27,41 +27,53 @@ namespace CardsAgainstHumanity.Front.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(int? id)
+        public ActionResult Create(string username)
         {
-            if(id == null)
+            if(username == null)
             {
                 return View();
             }
 
-            return RedirectToAction("Match", "Game", new { id = id });
-        }
+            var userCookie = new HttpCookie("user", username);
+            HttpContext.Response.SetCookie(userCookie);
 
+            return RedirectToAction("Match", "Game", new { id = 1 });
+        }
 
         public async Task<ActionResult> Match(int? id)
         {
-            var response = await _httpClient.GetAsync("api/Game/GetGame/" + id + "");
-
-            if (response.IsSuccessStatusCode)
+            if (id != null)
             {
-                Game game = await response.Content.ReadAsAsync<Game>();
 
-                var blackCard = game.Cards.Where(c => c.Black == 1).Take(1).First();
+                HttpCookie userCookie = HttpContext.Request.Cookies.Get("user");
+                var username = userCookie.Value;
 
-                ViewBag.BlackCard = blackCard.Description;
-                ViewBag.BlackCardID = blackCard.ID;
+                var response = await _httpClient.GetAsync("api/Game/GetGame/" + id + "?username=" + username);
 
-                var whiteCards = game.Cards.Where(c => c.Black == 0).Take(10).ToList();
-                ViewBag.WhiteCards = whiteCards;
+                if (response.IsSuccessStatusCode)
+                {
+                    Game game = await response.Content.ReadAsAsync<Game>();
 
-                var stash = game.Stash.Where(s => s.Game.ID == game.ID);
-                ViewBag.Stash = stash;
+                    var blackCard = game.Cards.Where(c => c.Black == 1).Take(1).First();
 
-                return View(game);
+                    ViewBag.BlackCard = blackCard.Description;
+                    ViewBag.BlackCardID = blackCard.ID;
+
+                    var whiteCards = game.UsedCards.Where(u => u.Username == username && u.Game.ID == id).Take(10).ToList();
+                    ViewBag.WhiteCards = whiteCards;
+
+                    var stash = game.Stash.Where(s => s.Game.ID == game.ID);
+                    ViewBag.Stash = stash;
+
+                    return View(game);
+                }
+
+                return View();
             }
-
-            return View();
+            else
+            {
+                return HttpNotFound();
+            }
         }
-
     }
 }
