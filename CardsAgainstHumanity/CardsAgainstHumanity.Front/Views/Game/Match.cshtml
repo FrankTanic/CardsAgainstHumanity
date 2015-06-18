@@ -3,40 +3,50 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="black-card-view">
-    <div>
-        <p id="black-card">@ViewBag.BlackCard</p>
+<input type="checkbox" id="OpenClose" class="toggle">
+<label for="OpenClose">Menu</label>
+
+<div class="sidebar-holder">
+    <div class="sidebar-gameinfo">
+        <ul>
+            <li>Game ID: @Model.ID</li>
+            <li>Created: @Model.Created</li>
+        </ul>
+
+        <ul id="connected"></ul>
+
+        <h2>Match</h2>
+
+        <ul id="players">
+            @foreach (var player in Model.Players)
+            {
+                <li id="@player.ID">
+                    @player.UserName @if (player.Czar == 1)
+                    { <text><span class="czar">(Czar)</span></text> }
+                </li>
+            }
+        </ul>
     </div>
 </div>
 
-<div class="played-card-view">
-    <button id="nextRound" value="@ViewBag.BlackCardID">Next Round</button>
-</div>
-
-<div class="cards-view">
-    @foreach (var card in ViewBag.WhiteCards)
-    {
-        <div class="white-card">
-            @card.Description
-            <button id="playCard" value="@card.ID">Play Card</button>
+<div id="page">
+    <div class="black-card-view">
+        <div>
+            <p id="black-card">@ViewBag.BlackCard</p>
         </div>
-    }
-</div>
+    </div>
+    <div class="played-card-view">
+        <button id="nextRound" value="@ViewBag.BlackCardID">Next Round</button>
+    </div>
 
-<div class="sidebar-gameinfo">
-    <ul>
-        <li>Game ID: @Model.ID</li>
-        <li>Created: @Model.Created</li>
-    </ul>
-
-    <ul id="connected"></ul>
-
-    <h2>Match</h2>
-
-    <ul id="players">
-        @foreach (var player in Model.Players)
+    <div class="cards-view">
+        @foreach (var card in ViewBag.WhiteCards)
         {
-            <li id="@player.ID">@player.UserName @if (player.Czar == 1) { <text><span class="czar">(Czar)</span></text> }</li>
+            <div class="white-card">
+                @card.Description
+                <button id="playCard" value="@card.ID">Play Card</button>
+            </div>
         }
-    </ul>
+    </div>
 </div>
+
