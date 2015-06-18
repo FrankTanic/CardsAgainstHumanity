@@ -14,7 +14,7 @@
     {
         foreach (var stash in ViewBag.Stash)
         {
-            <div id="@stash.Card.ID" class="white-card-played">@stash.Card.Description</div>
+            <div id="@stash.Card.ID" class="white-card-played"></div>
         }
     }
     <button id="nextRound" value="@ViewBag.BlackCardID">Next Round</button>
@@ -23,9 +23,9 @@
 <div class="cards-view">
     @foreach (var card in ViewBag.WhiteCards)
     {
-        <div class="white-card">
-            @card.Description
-            <button class="playCard" value="@card.ID">Play Card</button>
+        <div class="white-card card-@card.Card.ID">
+            @card.Card.Description
+            <button class="playCard" value="@card.Card.ID">Play Card</button>
         </div>
     }
 </div>
