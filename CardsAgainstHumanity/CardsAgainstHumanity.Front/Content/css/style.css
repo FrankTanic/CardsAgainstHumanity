@@ -14,18 +14,51 @@ header {
 }
 
 .container {
-    position: relative;
+    position: fixed;
     height: 100%;
+    width: 100%;
 }
 
-.sidebar-gameinfo {
-    position: absolute;
-    top: 0;
+.sidebar-holder {
+    position: fixed;
+    top: 0px;
     right: 0;
+    padding-left: 10px;
     width: 300px;
     height: 100%;
     background-color: #ccc;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
 }
+
+.sidebar-gameinfo {
+    margin-top: 50px;
+    width: 300px;
+    height: 100%;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+label {
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+input.toggle ~ div.sidebar-holder { 
+  height: 100%;
+  overflow: hidden;
+  transition: .6s all cubic-bezier(0.730, -0.485, 0.145, 1.620)
+}
+input.toggle:checked ~ div { height: 100%; right:-280px }
+input.toggle:checked + label { background: red; right:30px;}
+input.toggle { display: none;  }
+label { background: red; position: fixed; right: 310px; top: 0px; }
 
 /* Black card styling */
 
