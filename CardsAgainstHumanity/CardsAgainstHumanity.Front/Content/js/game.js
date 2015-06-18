@@ -49,8 +49,13 @@
         
     });
 
-    game.client.playWhiteCard = function (cardID) {
-        $('.played-card-view').append('<div id="' + cardID + '" class="white-card-played">');
+    game.client.playWhiteCard = function (cardID, cardDescription) {
+        $('.played-card-view').append('<div id="' + cardID + '" class="white-card-played"><span class="card-description-played">' + cardDescription + '</span>');
+        $('.card-description-played').hide();
+    }
+
+    game.client.showWhiteCards = function () {
+        $('.card-description-played').show();
     }
 
     $('.playCard').click(function () {
