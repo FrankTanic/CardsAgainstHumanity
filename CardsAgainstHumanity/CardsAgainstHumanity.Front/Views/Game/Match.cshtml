@@ -40,7 +40,7 @@
         {
             foreach (var stash in ViewBag.Stash)
             {
-                <div id="@stash.Card.ID" class="white-card-played"></div>
+                <div id="@stash.Card.ID" class="white-card-played"><span class="card-description-played">@stash.Card.Description</span></div>
             }
         }
         <button id="nextRound" value="@ViewBag.BlackCardID">Next Round</button>
