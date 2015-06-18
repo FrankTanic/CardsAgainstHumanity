@@ -11,6 +11,7 @@ namespace CardsAgainstHumanity.Front.Models
         public DateTimeOffset Created { get; set; }
         public virtual ICollection<Player> Players { get; set; }
         public virtual ICollection<Card> Cards { get; set; }
+        public virtual ICollection<UsedCard> UsedCards { get; set; }
         public virtual ICollection<GameCardStash> Stash { get; set; }
 
     }
@@ -27,5 +28,14 @@ namespace CardsAgainstHumanity.Front.Models
         public int ID { get; set; }
         public int Black { get; set; }
         public string Description { get; set; }
+    }
+
+    public class UsedCard
+    {
+        public int ID { get; set; }
+        public virtual Card Card { get; set; }
+        public virtual Game Game { get; set; }
+        public string Username { get; set; }
+        public bool IsUsed { get; set; }
     }
 }
