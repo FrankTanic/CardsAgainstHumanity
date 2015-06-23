@@ -23,6 +23,7 @@ namespace CardsAgainstHumanity.WebApi.Controllers
 
                 if (game.UsedCards.Count == 0)
                 {
+                    // Only look for cards that have black = 0 since there are no cards in the game yet //
                     var cards = game.Cards.Where(c => c.Black != 1)
                                 .OrderBy(c => Guid.NewGuid())
                                 .Take(10)
@@ -34,7 +35,8 @@ namespace CardsAgainstHumanity.WebApi.Controllers
                         {
                             Card = card,
                             Game = game,
-                            Username = username
+                            Username = username,
+                            IsUsed = true
                         });
                     }
 
@@ -49,7 +51,8 @@ namespace CardsAgainstHumanity.WebApi.Controllers
                         var usedCards = game.UsedCards.ToList();
                         var cards = game.Cards.ToList();
 
-                        var newCards = cards.Where(c => !usedCards.Any(uc => uc.Card.ID == c.ID && uc.Card.Black == 1) && c.Black == 0)
+                        // Take out the cards that are already in the UsedCards database so there are no duplicates//
+                        var newCards = cards.Where(c => !usedCards.Any(uc => uc.Card.ID == c.ID) && c.Black == 0)                
                                             .OrderBy(c => Guid.NewGuid())
                                             .Take(10)
                                             .ToList();
@@ -60,7 +63,8 @@ namespace CardsAgainstHumanity.WebApi.Controllers
                                 {
                                     Card = card,
                                     Game = game,
-                                    Username = username
+                                    Username = username,
+                                    IsUsed = true
                                 });
                         }
                         _db.SaveChanges();
