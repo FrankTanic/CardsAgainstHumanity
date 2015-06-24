@@ -116,6 +116,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\img\arrow_back_white.png" />
+    <Content Include="Content\img\cah-logo-medium.png" />
+    <Content Include="Content\img\cah-logo-small.png" />
+    <Content Include="Content\img\cah-logo.png" />
+    <Content Include="Content\img\check-hover.png" />
+    <Content Include="Content\img\check.png" />
+    <Content Include="Content\img\hamburger-icon.png" />
+    <Content Include="Content\img\round.png" />
     <Content Include="Content\js\game.js" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
@@ -150,7 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\img\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CardsAgainstHumanity.WebApi\CardsAgainstHumanity.WebApi.csproj">

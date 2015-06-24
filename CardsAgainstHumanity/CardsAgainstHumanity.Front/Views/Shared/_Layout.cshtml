@@ -10,9 +10,44 @@
     <script type="text/javascript" src="~/Content/js/game.js"></script>
 </head>
 <body>
-<header>
-</header>
+<aside id="sidebar">
+    <section class="user">
+        <span class="username"><img src="~/Content/img/cah-logo-small.png" class="profile-logo" />FrankTanic</span>
+    </section>
+    <section class="game-name">
+        <span class="g-name">@Model.GameName</span>
+    </section>
+    <section class="players-overview">
+        <table id="players">
+            @foreach (var player in Model.Players)
+            {
+                <tr>
+                    <td id="@player.ID">
+                        @player.UserName @if (player.Czar == 1)
+                        { <text><span class="czar">(Czar)</span></text> }
+                    </td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            }
+        </table>
+    </section>
+    <section class="notes">
+        <h2>Notes</h2>
+        <div id="notes"></div>
+        <ul id="connected"></ul>
+    </section>
+</aside>
 <div class="container">
+    <header>
+        <div class="leave">
+            <img src="~/Content/img/arrow_back_white.png" />
+        </div>
+        <div class="logo center-block">
+            <img src="~/Content/img/cah-logo-medium.png" />
+        </div>
+    </header>
     @RenderBody()
 </div>
 </body>
