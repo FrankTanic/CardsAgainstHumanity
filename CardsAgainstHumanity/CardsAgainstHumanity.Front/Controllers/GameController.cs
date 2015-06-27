@@ -54,10 +54,13 @@ namespace CardsAgainstHumanity.Front.Controllers
                 {
                     Game game = await response.Content.ReadAsAsync<Game>();
 
-                    var blackCard = game.Cards.Where(c => c.Black == 1).Take(1).First();
+                    var usedCards = game.UsedCards.ToList();
+
+                    var blackCard = game.Cards.Where(c => usedCards.Any(uc => uc.Card.ID == c.ID && uc.IsUsed == true) && c.Black == 1).Take(1).First();
 
                     ViewBag.BlackCard = blackCard.Description;
                     ViewBag.BlackCardID = blackCard.ID;
+                    
 
                     var whiteCards = game.UsedCards.Where(u => u.Username == username && u.Game.ID == id).Take(10).ToList();
                     ViewBag.WhiteCards = whiteCards;

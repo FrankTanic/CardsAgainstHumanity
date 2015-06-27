@@ -170,10 +170,52 @@ namespace CardsAgainstHumanity.WebApi.Hubs
                 _db.SaveChanges();
             }
 
-            var card = _db.Card.Where(c => c.ID != cardID && c.Black == 1).OrderBy(c => Guid.NewGuid()).Take(1).First();
-
             var game = _db.Game.Where(g => g.ID == gameID)
                                 .Single();
+
+            var usedCards = _db.Card.ToList();
+            var unUsedCards = _db.UsedCard.ToList();
+
+            //Get the old black card and mark it as no longer used.//
+
+            //Net _db.UsedCard.where veranderd naar usedCards.where//
+            var oldBlackCard = usedCards.Where(c => unUsedCards.Any(uc => uc.Card.ID == c.ID && uc.IsUsed == true && c.Black == 1)).Take(1).First();
+            var oldBlackCardID = unUsedCards.Where(c => usedCards.Any(uc => c.Card.ID == uc.ID && c.IsUsed == true && uc.Black == 1)).Take(1).First();
+
+            var RememberCard = oldBlackCardID.Card;
+
+            _db.UsedCard.Remove(oldBlackCardID);
+
+                _db.UsedCard.Add (new UsedCard()
+                {
+                    Card = RememberCard,
+                    Game = game,
+                    Username = null,
+                    IsUsed = false
+                });
+
+            _db.SaveChanges();
+
+            var usedCardsNew = _db.Card.ToList();
+            var unUsedCardsNew = _db.UsedCard.ToList();
+
+            var card = usedCardsNew.Where(c => unUsedCardsNew.Any(uc => uc.Card.ID != c.ID && uc.IsUsed != true && c.Black == 1)).OrderBy(c => Guid.NewGuid()).Take(1).First();
+
+            
+
+            //Add the new black card and mark it as being used.//
+                    _db.UsedCard.Add(new UsedCard()
+                            {
+                                 Card = card,
+                                 Game = game,
+                                 Username = null,
+                                 IsUsed = true
+                            });
+
+            _db.SaveChanges();
+            
+
+            
 
             var gameStash = game.Stash.ToList();
 
