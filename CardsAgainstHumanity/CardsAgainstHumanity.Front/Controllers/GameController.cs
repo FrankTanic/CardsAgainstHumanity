@@ -27,14 +27,14 @@ namespace CardsAgainstHumanity.Front.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(string username)
+        public ActionResult Create(Player model)
         {
-            if(username == null)
+            if(!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
 
-            var userCookie = new HttpCookie("user", username);
+            var userCookie = new HttpCookie("user", model.UserName);
             HttpContext.Response.SetCookie(userCookie);
 
             return RedirectToAction("Match", "Game", new { id = 1 });

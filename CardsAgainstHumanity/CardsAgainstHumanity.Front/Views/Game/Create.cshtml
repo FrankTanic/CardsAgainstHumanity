@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model CardsAgainstHumanity.Front.Models.Player
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -6,13 +8,19 @@
     <link rel="stylesheet" href="~/Content/css/style.css" />
     <script type="text/javascript" src="~/Scripts/jquery-1.6.4.min.js"></script>
 </head>
-<body>
+<body class="indigo">
     <header></header>
-    <div class="container">
-        <form method="post">
-            <input type="text" name="username" />
-            <button type="submit">Play</button>
-        </form>
+    <div class="wrapper">
+        <div class="create-form center-block">
+            <div class="logo-large">
+                <img src="~/Content/img/cah-logo.png" alt="cah-logo" />
+            </div>
+                <form method="post">
+                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => m.UserName)
+                    <button type="submit" class="btn">Play</button>
+                </form>
+        </div>
     </div>
 </body>
 </html>

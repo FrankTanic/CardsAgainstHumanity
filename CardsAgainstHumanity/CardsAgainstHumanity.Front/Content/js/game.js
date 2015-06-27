@@ -6,22 +6,22 @@
     var game = $.connection.gameHub;
 
     game.client.addChatMessage = function (message) {
-        $('#connected').append('<li>' + message + '</li>');
+        $('#notes').append('<div class="note">' + message + '</div>');
     };
 
     game.client.addPlayer = function (playerID, playerCzar, player) {
         if (playerCzar !== 1) {
-            $('#players').append('<li id="' + playerID + '" value="' + playerCzar + '" >' + player + '</li>');
+            $('#players').append('<tr><td id="' + playerID + '" value="' + playerCzar + '" >' + player + '</td><td>0</td></tr>');
         }
      else
         {
-            $('#players').append('<li id="' + playerID + '" value="' + playerCzar + '" >' + player + ' <span class="czar">(Czar)</span></li> ');
+            $('#players').append('<tr><td id="' + playerID + '" value="' + playerCzar + '" >' + player + ' <span class="czar">(Czar)</span></td></tr> ');
         }
     }
 
     game.client.removePlayer = function (player) {
         
-        $('#connected').append('<li>' + player + ' has left' + '</li>');
+        $('#notes').append('<div class="note">' + player + ' has left' + '</div>');
 
         $('li').filter(function () {
             return $.text([this]) === player;
